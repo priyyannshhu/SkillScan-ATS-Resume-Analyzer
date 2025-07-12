@@ -157,7 +157,7 @@ else:
 st.markdown("""
     <div class="footer">
         <p style='font-size:0.9rem;'>
-            Built by <strong>Priyanshu Vishwakarma</strong> with guidance from <strong>Krish Naik</strong><br>
+            Built by <strong>Priyanshu Vishwakarma</strong><br>
             <a href='https://github.com/priyyannshhu' target='_blank'>GitHub</a> ·
             <a href='https://www.linkedin.com/in/priyanshu-vishwakarmaa/' target='_blank'>LinkedIn</a> ·
             <a href='https://www.instagram.com/priyyannshhu' target='_blank'>Instagram</a>
