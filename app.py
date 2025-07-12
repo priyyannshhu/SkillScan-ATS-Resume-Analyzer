@@ -41,6 +41,7 @@ Give:
 - 2 weaknesses
 - Final verdict: Good match / Partial match / Poor match
 Respond in bullet points only.
+Do not use any markdown formatting like ** or * around text
 
 Resume:
 {text}
@@ -52,6 +53,7 @@ Job Description:
 prompt_template_2 = """
 You are a career coach and resume expert. Your task is to scan the resume and suggest the top 5 skills or certifications the candidate should improve or add, based on the job description.
 Return the list in bullet points with concise explanations.
+Respond in bullet points only. Do not use any markdown formatting like ** or * around text
 
 Resume:
 {text}
@@ -107,7 +109,7 @@ if uploaded_file and input_text.strip():
             prompt = prompt_template_1.format(text=resume_text, jd=input_text)
             st.subheader("📌 Resume Evaluation")
             response_text = get_gemini_response(prompt)
-            formatted_response = response_text.replace("\n", "<br>")
+            formatted_response = response_text.replace("\n", "<br>").replace("**", "")
             st.markdown(f"""
             <div style='text-align: left; padding: 1rem; line-height: 1.6; font-size: 1rem;'>
             {formatted_response}
@@ -119,7 +121,7 @@ if uploaded_file and input_text.strip():
             prompt = prompt_template_2.format(text=resume_text, jd=input_text)
             st.subheader("📈 Skill Development Plan")
             response_text = get_gemini_response(prompt)
-            formatted_response = response_text.replace("\n", "<br>")
+            formatted_response = response_text.replace("\n", "<br>").replace("**", "")
             st.markdown(f"""
             <div style='text-align: left; padding: 1rem; line-height: 1.6; font-size: 1rem;'>
             {formatted_response}
@@ -131,7 +133,7 @@ if uploaded_file and input_text.strip():
             prompt = prompt_template_3.format(text=resume_text, jd=input_text)
             st.subheader("📊 ATS Compatibility Report")
             response_text = get_gemini_response(prompt)
-            formatted_response = response_text.replace("\n", "<br>")
+            formatted_response = response_text.replace("\n", "<br>").replace("**", "")
             st.markdown(f"""
             <div style='text-align: left; padding: 1rem; line-height: 1.6; font-size: 1rem;'>
             {formatted_response}
@@ -143,7 +145,7 @@ if uploaded_file and input_text.strip():
             prompt = prompt_template_4.format(text=resume_text)
             st.subheader("🧭 Career Path Analysis")
             response_text = get_gemini_response(prompt)
-            formatted_response = response_text.replace("\n", "<br>")
+            formatted_response = response_text.replace("\n", "<br>").replace("**", "")
             st.markdown(f"""
             <div style='text-align: left; padding: 1rem; line-height: 1.6; font-size: 1rem;'>
             {formatted_response}
@@ -164,6 +166,8 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
+
+
 
 # --- Styles with Your Color Scheme ---
 st.markdown("""
@@ -301,218 +305,3 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-# # ATS Resume Analyzer using PyPDF2 (Text-based) with Styled UI
-
-# import streamlit as st
-# import google.generativeai as genai
-# import os
-# import PyPDF2 as pdf
-# from dotenv import load_dotenv
-
-# # Load API key
-# load_dotenv()
-# genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
-# # Streamlit UI Setup
-# st.set_page_config(page_title="ATS Resume Expert", layout="centered")
-
-# # Custom Tailwind-like styling
-# st.markdown("""
-#     <style>
-#         html, body, .main {
-#             background-color: #0A1A2F;
-#             color: #E1EAF5;
-#             font-family: 'Segoe UI', sans-serif;
-#         }
-
-#         h1, h2, h3, .stMarkdown h1 {
-#             color: #E1EAF5;
-#         }
-
-#         .stTextArea textarea {
-#             background-color: #132C4E !important;
-#             color: #E1EAF5 !important;
-#             border: 1px solid #2D415F !important;
-#             border-radius: 8px;
-#             padding: 12px;
-#             font-size: 15px;
-#         }
-
-#         .stTextInput>div>div>input {
-#             background-color: #132C4E !important;
-#             color: #E1EAF5 !important;
-#             border: 1px solid #2D415F !important;
-#             border-radius: 8px;
-#         }
-
-#         .stFileUploader {
-#             background-color: #132C4E !important;
-#             color: #E1EAF5 !important;
-#             border: 1px solid #2D415F !important;
-#             border-radius: 8px;
-#             padding: 8px;
-#         }
-
-#         .stButton>button {
-#             background-color: #2979FF !important;
-#             color: white !important;
-#             font-weight: 500;
-#             font-size: 15px;
-#             padding: 10px 20px;
-#             border-radius: 10px;
-#             border: none;
-#             transition: background-color 0.3s ease;
-#         }
-
-#         .stButton>button:hover {
-#             background-color: #1565C0 !important;
-#         }
-
-#         .stSubheader, .stCaption, .stMarkdown {
-#             color: #D0DCEC;
-#         }
-
-#         hr {
-#             border: 0;
-#             height: 1px;
-#             background: #2D415F;
-#             margin: 20px 0;
-#         }
-
-#         .stAlert {
-#             background-color: #1C2B40;
-#             border: 1px solid #2D415F;
-#             color: #E1EAF5;
-#             border-radius: 6px;
-#         }
-
-#         footer {
-#             visibility: hidden;
-#         }
-#     </style>
-# """, unsafe_allow_html=True)
-
-
-# # App Header
-# st.title("🧠 ATS Resume Analyzer - Text Based")
-# st.caption("Analyze your resume against job descriptions using Gemini 1.5 Flash & PyPDF2.")
-
-# # Input Fields
-# input_text = st.text_area("📄 Paste the Job Description here:", key="input")
-# uploaded_file = st.file_uploader("📎 Upload your Resume (PDF only)", type=["pdf"])
-
-# if uploaded_file is not None:
-#     st.success("✅ Resume uploaded successfully!")
-
-# # Extract resume text using PyPDF2
-# def input_pdf_text(uploaded_file):
-#     reader = pdf.PdfReader(uploaded_file)
-#     text = ""
-#     for page in reader.pages:
-#         text += page.extract_text()
-#     return text
-
-# # Generate Gemini API response
-# def get_gemini_response(input_text):
-#     model = genai.GenerativeModel('gemini-1.5-flash')
-#     response = model.generate_content(input_text)
-#     return response.text
-
-# # --- Prompt Templates ---
-# prompt_template_1 = """
-# You are a senior HR professional experienced in Data Science, Full Stack Development, DevOps, and Data Analytics roles.
-# Carefully review the provided resume in the context of the job description.
-# Provide a detailed, human-readable evaluation of how well the resume matches the job, including key strengths and areas of improvement.
-# Give:
-# - 3 key strengths
-# - 2 weaknesses
-# - Final verdict: Good match / Partial match / Poor match
-# Respond in bullet points only.
-
-# Resume:
-# {text}
-
-# Job Description:
-# {jd}
-# """
-
-# prompt_template_2 = """
-# You are a career coach and resume expert. Your task is to scan the resume and suggest the top 5 skills or certifications the candidate should improve or add, based on the job description.
-# Return the list in bullet points with concise explanations.
-
-# Resume:
-# {text}
-
-# Job Description:
-# {jd}
-# """
-
-# prompt_template_3 = """
-# You are an intelligent Applicant Tracking System (ATS).
-# Start by calculating the **percentage match** between the resume and job description.
-# Then list all **missing but important keywords**.
-# Finally, provide **a brief and structured analysis** of the resume's overall alignment.
-
-# Return this JSON structure only, but make it more readable:
-# {{
-# "JD Match": "xx%",
-# "MissingKeywords": ["keyword1", "keyword2"],
-# "Profile Summary": "Brief summary here"
-# }}
-
-# Resume:
-# {text}
-
-# Job Description:
-# {jd}
-# """
-
-# prompt_template_4 = """
-# You are an industry-level resume analyst.
-# Go through the resume and suggest what role (Data Analyst, Full Stack Dev, DevOps, etc.) the candidate seems best suited for based on their skills, experience, and language used in the resume.
-# Return the result clearly:
-
-# - Suggested Role
-# - Confidence Score (e.g., 90%)
-# - One-line Reasoning
-
-# Resume:
-# {text}
-# """
-
-# # Buttons Layout
-# col1, col2 = st.columns(2)
-# with col1:
-#     submit1 = st.button("📌 Evaluate Resume")
-#     submit2 = st.button("📈 Improve My Skills")
-# with col2:
-#     submit3 = st.button("📊 Match Percentage")
-#     submit4 = st.button("🧭 Suggest Ideal Role")
-
-# # Button Handlers
-# if uploaded_file is not None and input_text.strip():
-#     resume_text = input_pdf_text(uploaded_file)
-
-#     if submit1:
-#         prompt = prompt_template_1.format(text=resume_text, jd=input_text)
-#         st.subheader("📌 Resume Evaluation")
-#         st.write(get_gemini_response(prompt))
-
-#     elif submit2:
-#         prompt = prompt_template_2.format(text=resume_text, jd=input_text)
-#         st.subheader("📈 Suggested Skill Improvements")
-#         st.write(get_gemini_response(prompt))
-
-#     elif submit3:
-#         prompt = prompt_template_3.format(text=resume_text, jd=input_text)
-#         st.subheader("📊 Match % & Missing Keywords")
-#         st.write(get_gemini_response(prompt))
-
-#     elif submit4:
-#         prompt = prompt_template_4.format(text=resume_text)
-#         st.subheader("🧭 Ideal Role Suggestion")
-#         st.write(get_gemini_response(prompt))
-# else:
-#     if any([submit1, submit2, submit3, submit4]):
-#         st.warning("⚠️ Please upload your resume and paste the job description before proceeding.")
